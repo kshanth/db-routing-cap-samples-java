@@ -1,5 +1,5 @@
 {
-	"xsappname": "bookshop-java-public",
+	"xsappname": "bookshop-ciap20-dev",
 	"tenant-mode": "dedicated",
 	"scopes": [
 		{
@@ -25,5 +25,10 @@
 				"businessPartner"
 			]
 		}
-	]
+	],
+    "oauth2-configuration": {
+        "redirect-uris": [
+            "http*://*.aws.saptfe-demo.com/**"
+        ]
+    }
 }

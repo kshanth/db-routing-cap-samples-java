@@ -68,6 +68,11 @@
 		"source": "^/api/(.*)$",
 		"authenticationType": "none",
 		"destination": "backend"
+	  },
+      {
+		"source": "^/actuator/(.*)$",
+		"authenticationType": "none",
+		"destination": "backend"
 	  }
 	]
 }

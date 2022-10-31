@@ -45,7 +45,7 @@ public class CatalogServiceHandlerTest {
 		book2.setTitle("Book 2");
 		book2.setStock(200);
 
-		CatalogServiceHandler handler = new CatalogServiceHandler(db, reviewService, messages, ratingCalculator, model);
+		CatalogServiceHandler handler = new CatalogServiceHandler(db, reviewService, messages, ratingCalculator, model, "secondary");
 		handler.discountBooks(Stream.of(book1, book2));
 
 		assertEquals("Book 1", book1.getTitle(), "Book 1 was discounted");

@@ -17,6 +17,7 @@ import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
+import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -30,7 +31,10 @@ import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import cds.gen.catalogservice.AddReviewContext;
 import cds.gen.catalogservice.Books;
@@ -65,16 +69,30 @@ class CatalogServiceHandler implements EventHandler {
 	private final RatingCalculator ratingCalculator;
 
 	private final CqnAnalyzer analyzer;
+	private final String readEndPointRegion;
+	
 
 	CatalogServiceHandler(PersistenceService db, @Qualifier(ReviewService_.CDS_NAME) DraftService reviewService,
-			Messages messages, RatingCalculator ratingCalculator, CdsModel model) {
+			Messages messages, RatingCalculator ratingCalculator, CdsModel model, @Value("${READ_ENDPOINT_REGION}") String readEndPointRegion) {
 		this.db = db;
 		this.reviewService = reviewService;
 		this.messages = messages;
 		this.ratingCalculator = ratingCalculator;
 		this.analyzer = CqnAnalyzer.create(model);
+		this.readEndPointRegion = readEndPointRegion;
 	}
+	
+	// @Before(event = { CqnService.EVENT_READ})
+	// public void beforeEvent(EventContext context) {
+	// 	RequestContextHolder.currentRequestAttributes().setAttribute("readEndPointRegion", readEndPointRegion, RequestAttributes.SCOPE_REQUEST);
+	// }
 
+	@Before(event = { CqnService.EVENT_READ})
+	public void beforeEvent(EventContext context) {
+		
+		RequestContextHolder.currentRequestAttributes().setAttribute("readEndPointRegion", "secondary", RequestAttributes.SCOPE_REQUEST);
+	}
+	
 	/**
 	 * Invokes some validations before creating a review.
 	 *
